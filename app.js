@@ -1,12 +1,107 @@
 import express from "express";
+import cookieParser from 'cookie-parser';
+import cookieSession from 'cookie-session';
+import cors from 'cors';
+import passport from 'passport';
+import passportConfig from './config/passport-setup.js'
+import dotenv from 'dotenv'
+
+
+// Initializing the app
 const app = express();
+passportConfig(passport);
+
+
+// setting the config files
+dotenv.config();
+
+
+// Importing the DB Connection
+import dbConnection from './db/connectToDb.js';
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, (req, res) => {
-    console.log('Now listening for request');
+(async () => {
+    try {
+        await dbConnection(process.env.MONGODB_URI);
+        console.log("DB instance initialized and connected to!");
+        app.listen(PORT, () => {
+            console.log("Now, listening for Incoming Request!");
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})()
+
+//Importing the various middlewares
+
+// require('./randomschedule');
+
+// installing the middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// app.use(flash())
+app.use(cookieSession({
+    maxAge: 60 * 60 * 24 * 1000,
+    keys: [process.env.COOKIE_KEY]
+}));
+//Initializing passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// this is a workaround code for passport 0.6.0
+app.use(function (request, response, next) {
+    if (request.session && !request.session.regenerate) {
+        request.session.regenerate = (cb) => {
+            cb()
+        }
+    }
+    if (request.session && !request.session.save) {
+        request.session.save = (cb) => {
+            cb()
+        }
+    }
+    next()
 })
 
-app.get('*', (req, res) => {
 
-    res.render('404')
+// setting the view engine
+app.set('view engine', 'ejs');
+
+
+// importing the Auth API routes
+import authRoutes from './routes/authRoutes.js';
+
+app.get('/', (req, res) => {
+    res.send('what are you doing here')
+});
+
+
+app.use("/api/v1/auth/",
+    // connectEnsureLogin.ensureLoggedOut({ redirectTo: "/dashboard" }),
+    authRoutes);
+
+// Importing normal API routes
+import apiRoutes from './routes/index.js';
+app.use('/api/v1/', apiRoutes);
+
+// import test files
+// require('./test');
+
+app.use('/search', (req, res) => {
+    res.render('search')
+})
+
+app.get('/test/chat', (req, res) => {
+
+    const { myId, who, whoId } = req.query;
+    res.render('chat', { myId, recipient: { _id: whoId, name: who } });
+})
+
+
+app.get("*", (req, res) => {
+    res.status(404).render('404');
 })
