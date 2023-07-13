@@ -33,9 +33,9 @@ function extractVariableNames(data) {
 
     // Extract variable names
     const variableNames = lines
-        .map((line) => line.trim()) // Trim leading/trailing spaces
-        .filter((line) => line && !line.startsWith('#')) // Exclude empty lines and comments
-        .map((line) => line.split('=')[0]); // Extract variable name before '='
+        .map((line) => line.trim())
+        .filter((line) => line && !line.startsWith('#'))
+        .map((line) => line.split('=')[0]);
 
     return variableNames;
 }
