@@ -32,9 +32,7 @@ const PORT = process.env.PORT || 3000;
     }
 })()
 
-//Importing the various middlewares
 
-// require('./randomschedule');
 
 // installing the middleware
 app.use(cors());
@@ -43,11 +41,11 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// app.use(flash())
 app.use(cookieSession({
     maxAge: 60 * 60 * 24 * 1000,
     keys: [process.env.COOKIE_KEY]
 }));
+
 //Initializing passport
 app.use(passport.initialize());
 app.use(passport.session());
@@ -88,18 +86,6 @@ app.use("/api/v1/auth/",
 import apiRoutes from './routes/index.js';
 app.use('/api/v1/', apiRoutes);
 
-// import test files
-// require('./test');
-
-app.use('/search', (req, res) => {
-    res.render('search')
-})
-
-app.get('/test/chat', (req, res) => {
-
-    const { myId, who, whoId } = req.query;
-    res.render('chat', { myId, recipient: { _id: whoId, name: who } });
-})
 
 
 app.get("*", (req, res) => {
