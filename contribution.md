@@ -1,7 +1,3 @@
-Certainly! Here's an updated example, assuming the contributor's name is Daniel and the commit message is "starter files for Deliva Pro":
-
----
-
 # Contributing to Deliva-Backend
 
 Welcome to Deliva-Backend! As a member of our organization, we appreciate your interest in contributing to our project. Please follow the guidelines below to ensure a smooth collaboration process.
@@ -11,7 +7,7 @@ Welcome to Deliva-Backend! As a member of our organization, we appreciate your i
 1. Pull the latest changes from the main repository to your local machine. You can do this by executing the following command:
 
    ```
-   git pull origin main
+   git pull https://github.com/Deliva-Pro/Deliva-Backend.git
    ```
 
 2. Create a new branch with your name to work on your changes. In this case, the branch name would be "daniel". You can create the branch using the following command:
