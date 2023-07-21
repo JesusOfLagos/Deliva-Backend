@@ -26,6 +26,7 @@ const PORT = process.env.PORT || 3000;
         console.log("DB instance initialized and connected to!");
         app.listen(PORT, () => {
             console.log("Now, listening for Incoming Request!");
+            console.log(`http://${process.env.HOST}:${process.env.PORT}`);
         })
     } catch (error) {
         console.log(error)
@@ -89,5 +90,6 @@ app.use('/api/v1/', apiRoutes);
 
 
 app.get("*", (req, res) => {
-    res.status(404).render('404');
+    // res.status(404).render('404');
+    res.send("No Page lmao...404 mf!!!");
 })
