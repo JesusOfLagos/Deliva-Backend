@@ -14,6 +14,8 @@ To do:
 and they can accept or not
 7. tracks till they get there,
 says they are there.
-8. start trip, end trip...track along...
+8. start trip, end trip...track along... (they can call along)
 9. reach destination and charge the user;
 10. pay cash
+11. Ratings (Ratings is average of the overall ratinsg)
+12. Push notifications if the driver's app isn't open

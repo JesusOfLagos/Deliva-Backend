@@ -1,23 +1,33 @@
-import { Schema, model } from 'mongoose';
+import { Model, Schema } from "mongoose";
 import Auth from './AUTH.js';
 import bcrypt from 'bcrypt';
 import pkg from 'validator';
 const { isEmail } = pkg;
 import { randomUUID } from 'crypto';
 
-
-// User Model
-const userSchema = new Schema({
+const riderSchema = new Schema({
     _id: {
         type: Schema.Types.UUID,
         default: () => randomUUID()
     },
+    firstName: {
+        type: String,
+        required: true
+    },
+    lastName: {
+        type: String,
+        required: true,
+    },
     email: {
         type: String,
         required: true,
-        unique: true,
-        lowercase: true,
-        validate: [isEmail, "Please provide a valid email address"]
+        unique: true
+    },
+    authType: {
+        type: String,
+        enum: ["GOOGLE", "FACEBOOK", "EMAIL"],
+        required: true,
+        default: "Email"
     },
     verified: {
         type: Boolean,
@@ -31,12 +41,12 @@ const userSchema = new Schema({
     },
 }, { timestamps: true });
 
-userSchema.pre(/^find/, function (next) {
+riderSchema.pre(/^find/, function (next) {
     this.find({ active: { $ne: false } });
     next();
 });
 
-userSchema.statics.CreateAccount = async function (email, password) {
+riderSchema.statics.CreateAccount = async function (email, password) {
     console.log(email, password)
     try {
         const newUser = await this.create({ email });
@@ -47,7 +57,7 @@ userSchema.statics.CreateAccount = async function (email, password) {
     }
 }
 
-userSchema.statics.Login = async function (email, password) {
+riderSchema.statics.Login = async function (email, password) {
     try {
         const foundUser = await this.findOne({ email });
         const secretPlace = await Auth.findOne({ who: foundUser._id });
@@ -62,6 +72,6 @@ userSchema.statics.Login = async function (email, password) {
     }
 }
 
-const User = model('User', userSchema);
+const RIDER = Model('RIDER', riderSchema);
 
-export default User;
+export default RIDER;
