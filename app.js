@@ -91,5 +91,5 @@ app.use('/api/v1/', apiRoutes);
 
 app.get("*", (req, res) => {
     // res.status(404).render('404');
-    res.send("No Page lmao...404 mf!!!")
+    res.send("No Page lmao...404 mf!!!");
 })
