@@ -16,7 +16,7 @@ passportConfig(passport);
 dotenv.config();
 
 
-// Importing the DB Connection
+// Importing the DB Connection 
 import dbConnection from './db/connectToDb.js';
 
 const PORT = process.env.PORT || 3000;

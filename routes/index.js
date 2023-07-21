@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { ensureLoggedIn } from "../middlewares/authenticate.js";
+import { ensureLoggedIn } from "../middlewares/authenticationStatus.js";
 const router = Router();
 
 import apiRoutes from './api/index.js'
