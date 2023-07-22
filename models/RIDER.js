@@ -46,16 +46,16 @@ riderSchema.pre(/^find/, function (next) {
     next();
 });
 
-riderSchema.statics.CreateAccount = async function (email, password) {
-    console.log(email, password)
+riderSchema.statics.CreateAccount = async function (email, password, firstName = undefined, lastName = undefined) {
+    console.log("fd", email, password, firstName, lastName)
     try {
-        const newUser = await this.create({ email });
+        const newUser = await this.create({ email, firstName, lastName });
         const createdPassword = await Auth.create({ who: newUser._id, secret: password });
         return newUser;
     } catch (error) {
         throw error;
     }
-}
+};
 
 riderSchema.statics.Login = async function (email, password) {
     try {
