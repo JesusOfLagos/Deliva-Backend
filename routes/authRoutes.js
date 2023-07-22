@@ -7,6 +7,6 @@ const router = Router();
 
 router.post('/:role/register', register_post);
 router.post('/:role/login/', local_scope, smart_redirect);
-router.post('/logout', logout_post);
+router.post('/:role/logout', logout_post);
 
 export default router; 

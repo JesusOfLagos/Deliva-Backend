@@ -3,8 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { switchProfile } from '../utils/globals/profileSwitch.js';
-import USER from '../models/USER.js';
-import RIDER from '../models/RIDER.js';
+
 
 const passportConfig = (passport) => {
 
@@ -15,9 +14,9 @@ const passportConfig = (passport) => {
     });
 
     // Deserialize User
-    passport.deserializeUser(async (userId, next) => {
+    passport.deserializeUser(async (user, next) => {
         try {
-            const result = await User.findById(userId.id);
+            const result = await switchProfile(user.role).findById(user.id);
             next(null, result);
         } catch (error) {
             console.log(error);

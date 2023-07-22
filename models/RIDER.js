@@ -39,6 +39,11 @@ const riderSchema = new Schema({
         default: true,
         select: false,
     },
+    role: {
+        type: String,
+        default: 'rider',
+        required: true
+    },
 }, { timestamps: true });
 
 riderSchema.pre(/^find/, function (next) {
