@@ -24,7 +24,7 @@ const errorHandler = (error) => {
     if (error.code === 11000) {
         errorObject.email = "Hey! There's an account with that email";
     }
-    if (error.message.includes('User validation failed')) {
+    if (error.message.includes('validation failed')) {
         const pinPoint = Object.values(error.errors);
         pinPoint.forEach(({ properties }) => {
             errorObject[properties.path] = properties.message;

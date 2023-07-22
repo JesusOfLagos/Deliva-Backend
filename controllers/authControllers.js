@@ -8,9 +8,10 @@ import { switchProfile } from "../utils/globals/profileSwitch.js";
 
 export const register_post = asyncTryCatch(async (req, res, next) => {
     const { email, password } = req.body;
+    console.log(req.params.role);
     if (password?.length >= 8) {
         try {
-            const newUser = await switchProfile(req.body.role).CreateAccount(email, password);
+            const newUser = await switchProfile(req.params.role).CreateAccount(email, password);
             if (newUser) {
                 // setting up passport serializer
                 req.login(newUser, (err) => {

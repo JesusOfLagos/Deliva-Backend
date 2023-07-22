@@ -12,22 +12,22 @@ const riderSchema = new Schema({
     },
     firstName: {
         type: String,
-        required: true
+        required: [true, "First Name is required."],
     },
     lastName: {
         type: String,
-        required: true,
+        required: [true, "Last Name is required."],
     },
     email: {
         type: String,
-        required: true,
-        unique: true
+        required: [true, "An email address is required."],
+        unique: [true, "There's an email account with this email"]
     },
     authType: {
         type: String,
         enum: ["GOOGLE", "FACEBOOK", "EMAIL"],
-        required: true,
-        default: "Email"
+        required: [true, "No valid authentication method was supplied"],
+        default: "EMAIL"
     },
     verified: {
         type: Boolean,

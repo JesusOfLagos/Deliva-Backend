@@ -4,8 +4,8 @@ import { local_scope, logout_post, register_post } from "../controllers/authCont
 const router = Router();
 
 
-router.post('/register', register_post);
-router.post('/login', local_scope, (req, res) => {
+router.post('/:role/register', register_post);
+router.post('/:role/login/', local_scope, (req, res) => {
    res.json({message: 'we are in'})
 });
 router.post('/logout', logout_post);
