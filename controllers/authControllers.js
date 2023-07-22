@@ -7,11 +7,15 @@ import RIDER from "../models/RIDER.js";
 import { switchProfile } from "../utils/globals/profileSwitch.js";
 
 export const register_post = asyncTryCatch(async (req, res, next) => {
-    const { email, password } = req.body;
+    const { email, password, firstName, lastName } = req.body;
     console.log(req.params.role);
     if (password?.length >= 8) {
         try {
-            const newUser = await switchProfile(req.params.role).CreateAccount(email, password);
+            const newUser = await switchProfile(req.params.role).CreateAccount(
+                email,
+                password,
+                firstName,
+                lastName);
             if (newUser) {
                 // setting up passport serializer
                 req.login(newUser, (err) => {
@@ -44,14 +48,35 @@ export const logout_post = asyncTryCatch(async (req, res, next) => {
     });
 });
 
-export const local_scope = asyncTryCatch(async (req, res, next) => {
+export const local_scope = (req, res, next) => {
     passport.authenticate('local')(req, res, next);
-});
+};
 
+
+export const google_scope = (req, res, next) => {
+    passport.authenticate('google', {
+        scope: ['profile', 'email']
+    })(req, res, next);
+};
+
+export const sign_in_with_google = (req, res, next) => {
+    passport.authenticate('google')(req, res, next);
+};
 
 export const forgot_password = (req, res) => {
     res.render('forgot-password');
-}
+};
+
+export const smart_redirect = (req, res) => {
+    const url = (req.session.returnTo || "/dashboard");
+    console.log(req.user);
+    res.json({ redirect: url, data: req.user });
+};
+
+export const smart_redirect_google = (req, res) => {
+    const url = (req.session.returnTo || "/dashboard");
+    res.redirect(url);
+};
 
 export const recover_password = asyncTryCatch(async (req, res) => {
     console.log(req.body.email);

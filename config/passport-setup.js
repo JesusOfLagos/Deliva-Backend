@@ -2,7 +2,9 @@ import { Strategy as localStrategy } from 'passport-local';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import User from '../models/USER.js';
+import { switchProfile } from '../utils/globals/profileSwitch.js';
+import USER from '../models/USER.js';
+import RIDER from '../models/RIDER.js';
 
 const passportConfig = (passport) => {
 
@@ -33,7 +35,7 @@ const passportConfig = (passport) => {
             },
             async (req, email, password, next) => {
                 try {
-                    const result = await User.Login(email, password);
+               const result = await switchProfile(req.params.role).Login(email, password);
                     next(null, result);
                 } catch (error) {
                     console.log(error)
