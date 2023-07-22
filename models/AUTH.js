@@ -1,17 +1,12 @@
 import { Schema, model } from "mongoose";
 import { genSalt, hash } from 'bcrypt';
-import { randomUUID } from 'crypto';
 
 
 const authSchema = new Schema({
-     _id: {
-        type: Schema.Types.UUID,
-        default: () => randomUUID(),
-    },
     who: {
         type: Schema.Types.UUID,
-        ref: 'User',
         required: true,
+        ref: 'User',
         unique: true
     },
     secret: {
@@ -19,7 +14,7 @@ const authSchema = new Schema({
         minlength: [8, "Password length is too short"],
         required: [true, "Please provide a password"]
     }
-}, { timestamps: true });
+}, { timestamps: true});
 
 
 authSchema.pre('save', async function (next) {

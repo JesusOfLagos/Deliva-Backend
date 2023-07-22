@@ -1,4 +1,4 @@
-import { Model, Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 import Auth from './AUTH.js';
 import bcrypt from 'bcrypt';
 import pkg from 'validator';
@@ -72,6 +72,6 @@ riderSchema.statics.Login = async function (email, password) {
     }
 }
 
-const RIDER = Model('RIDER', riderSchema);
+const RIDER = model('RIDER', riderSchema);
 
 export default RIDER;

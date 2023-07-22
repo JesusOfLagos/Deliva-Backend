@@ -1,16 +1,20 @@
-import errorHandler from "../middlewares/errorHandler.js";
-import User from "../models/USER.js";
 import passport from "passport";
+import asyncTryCatch from "../utils/globals/tryCatchAllFn.js";
+import AppError from "../utils/globals/customError.js";
+import errorHandler from "../utils/errorHandlers/authError.js";
+import USER from "../models/USER.js";
+import RIDER from "../models/RIDER.js";
+import { switchProfile } from "../utils/globals/profileSwitch.js";
 
-export const register_post = async (req, res, next) => {
+export const register_post = asyncTryCatch(async (req, res, next) => {
     const { email, password } = req.body;
-    if (password.length >= 8) {
+    if (password?.length >= 8) {
         try {
-            const newUser = await User.CreateAccount(email, password);
+            const newUser = await switchProfile(req.body.role).CreateAccount(email, password);
             if (newUser) {
                 // setting up passport serializer
                 req.login(newUser, (err) => {
-                    console.log('we in');
+                    console.log('We are in');
                     if (err) {
                         console.error(err);
                         console.log('but theres a problem');
@@ -20,16 +24,15 @@ export const register_post = async (req, res, next) => {
                 res.status(201).json({ success: { message: "Account created succesfully!", data: newUser } })
             }
         } catch (error) {
-            console.log(error);
-            const cleanedError = errorHandler(error);
-            res.status(400).json(error)
+            console.log(error)
+            next(new AppError(errorHandler(error), 400));
         }
     } else {
-        res.status(400).json({ error: { message: 'Password length is too short!' } })
+        next(new AppError('Password length is too short!', 400));
     }
-}
+});
 
-export const logout_post = async (req, res, next) => {
+export const logout_post = asyncTryCatch(async (req, res, next) => {
     req.logout(function (err) {
         if (err) {
             return next(err);
@@ -38,8 +41,55 @@ export const logout_post = async (req, res, next) => {
         // what's the appropriate code for loggin out?
         res.status(200).json({ success: { message: "Logged out successfully" } })
     });
+});
+
+export const local_scope = asyncTryCatch(async (req, res, next) => {
+    passport.authenticate('local')(req, res, next);
+});
+
+
+export const forgot_password = (req, res) => {
+    res.render('forgot-password');
 }
 
-export const local_scope = (req, res, next) => {
-    passport.authenticate('local')(req, res, next);
-};
+export const recover_password = asyncTryCatch(async (req, res) => {
+    console.log(req.body.email);
+    if (req.body.email) {
+        try {
+            const result = await switchProfile(req.body.role).RecoverPassword(req.body.email);
+            res.status(200).json({ status: "success", data: result })
+        } catch (error) {
+            console.log("df", error);
+            res.status(400).json({ error: error.message })
+        }
+    } else {
+        res.status(400).json({ error: "Please supply a Valid email address" })
+    }
+});
+
+
+export const reset_password_get = (req, res) => {
+    const resetId = req.params.resetId;
+    res.status(200).json({ token: resetId });
+}
+
+export const reset_password_post = asyncTryCatch(async (req, res) => {
+    console.log(req.body);
+    try {
+        const { email, id, role, key } = verifyToken(req.body.token);
+        console.log('decoded ', email, id, role);
+        if (req.body.email != email) {
+            res.status(400).json({ error: "Incorrect Details Supplied" });
+        } else if (req.body.password?.length >= 8) {
+            result = await switchProfile(role).ResetPassword(id, key, req.body.password);
+            if (result === 'updated') {
+                res.status(200).json({ status: "success", data: 'Password updated successfully' })
+            }
+        } else {
+            res.status(400).json({ status: "error", message: "Password length is too short" })
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ status: "error", message: error.message })
+    }
+});

@@ -59,7 +59,7 @@ app.use(function (request, response, next) {
         }
     }
     if (request.session && !request.session.save) {
-        request.session.save = (cb) => {
+        request.session.save = (cb) => { 
             cb()
         }
     }
@@ -90,6 +90,20 @@ app.use('/api/v1/', apiRoutes);
 
 
 app.get("*", (req, res) => {
-    // res.status(404).render('404');
-    res.send("No Page lmao...404 mf!!!");
-})
+    res.status(404).json({
+        message: `Can't find ${req.originalUrl} this route`,
+        additional: "do you know what tf you doing?"
+    });
+});
+
+app.use((err, req, res, next) => {
+    err.status = err.status || "fail";
+    err.statusCode = err.statusCode || 500;
+
+    res.status(err.statusCode).json({ 
+        status: err.status,
+        message: err.message,
+        field: err.field,
+        stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+    });
+});
