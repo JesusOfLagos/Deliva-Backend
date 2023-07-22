@@ -16,6 +16,7 @@ export const register_post = asyncTryCatch(async (req, res, next) => {
                 password,
                 firstName,
                 lastName);
+                console.log(newUser);
             if (newUser) {
                 // setting up passport serializer
                 req.login(newUser, (err) => {
