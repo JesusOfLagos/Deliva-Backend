@@ -12,15 +12,15 @@ const riderSchema = new Schema({
     },
     firstName: {
         type: String,
-        required: [true, "First Name is required for registration."],
+        required: [true, "First Name is required."],
     },
     lastName: {
         type: String,
-        required: [true, "Last Name is required for registration."],
+        required: [true, "Last Name is required."],
     },
     email: {
         type: String,
-        required: [true, "An email address is required for registration"],
+        required: [true, "An email address is required."],
         unique: [true, "There's an email account with this email"]
     },
     authType: {
