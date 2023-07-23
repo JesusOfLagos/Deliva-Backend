@@ -44,6 +44,13 @@ const riderSchema = new Schema({
         default: 'rider',
         required: true
     },
+    base: {
+        type: { type: String },
+        coordinates: [Number],
+    },
+    contact: {
+        type: String,
+    }
 }, { timestamps: true });
 
 riderSchema.pre(/^find/, function (next) {

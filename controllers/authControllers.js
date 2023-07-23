@@ -2,8 +2,6 @@ import passport from "passport";
 import asyncTryCatch from "../utils/globals/tryCatchAllFn.js";
 import AppError from "../utils/globals/customError.js";
 import errorHandler from "../utils/errorHandlers/authError.js";
-import USER from "../models/USER.js";
-import RIDER from "../models/RIDER.js";
 import { switchProfile } from "../utils/globals/profileSwitch.js";
 
 export const register_post = asyncTryCatch(async (req, res, next) => {
@@ -44,7 +42,7 @@ export const logout_post = asyncTryCatch(async (req, res, next) => {
             return next(err);
         }
         console.log('nigga just logged out');
-        // what's the appropriate code for loggin out?
+        // what's the appropriate code for logging out?
         res.status(200).json({ success: { message: "Logged out successfully" } })
     });
 });
