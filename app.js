@@ -34,6 +34,17 @@ const PORT = process.env.PORT || 3000;
 })()
 
 
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+});
+
+app.use('/api/v1/ping' , (req, res) => {
+    res.status(200).json({
+        message: "Welcome To Deliva!😍"
+    })
+})
+
 
 // installing the middleware
 app.use(cors());

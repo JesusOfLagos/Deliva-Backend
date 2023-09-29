@@ -1,5 +1,5 @@
 import { Router } from "express";
+const orderRouter = Router();
 
 
-
-export default Router;
+export default orderRouter;
